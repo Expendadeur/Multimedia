@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVibe Admin | Dashboard</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+
+<body>
+
+    <!-- ─── Login Screen ─────────────────────────────────────────────────── -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-card glass">
+            <div class="logo">Stream<span>Vibe</span></div>
+            <p class="login-subtitle">Espace Administrateur</p>
+            <form id="login-form" novalidate>
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <div class="input-icon-wrap">
+                        <i class="ri-mail-line"></i>
+                        <input type="email" id="login-email" placeholder="admin@streamvibe.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Mot de passe</label>
+                    <div class="input-icon-wrap">
+                        <i class="ri-lock-line"></i>
+                        <input type="password" id="login-password" placeholder="••••••••" required>
+                        <button type="button" id="toggle-pw" class="toggle-pw-btn"><i
+                                class="ri-eye-off-line"></i></button>
+                    </div>
+                </div>
+                <div id="login-error" class="form-error hidden">Email ou mot de passe incorrect.</div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Se connecter</button>
+            </form>
+            <p class="login-hint">Identifiants démo : admin@streamvibe.com / Admin123!</p>
+        </div>
+    </div>
+
+    <!-- ─── Admin Dashboard (hidden until login) ────────────────────────── -->
+    <div id="admin-app" class="admin-app hidden">
+
+        <!-- Sidebar -->
+        <aside class="sidebar glass">
+            <div class="logo sidebar-logo">Stream<span>Vibe</span></div>
+            <nav class="sidebar-nav">
+                <button class="sidebar-btn active" data-view="dashboard">
+                    <i class="ri-dashboard-line"></i> Dashboard
+                </button>
+
+                <div class="sidebar-divider">BIBLIOTHÈQUE</div>
+                <button class="sidebar-btn" data-view="catalog">
+                    <i class="ri-film-line"></i> Tout le Catalogue
+                </button>
+
+                <div class="sidebar-divider">STUDIOS DE PUBLICATION</div>
+                <button class="sidebar-btn" data-view="publish" data-type="video">
+                    <i class="ri-video-add-line"></i> Vidéos & Anim
+                </button>
+                <button class="sidebar-btn" data-view="publish" data-type="music">
+                    <i class="ri-music-2-line"></i> Musique & Pod
+                </button>
+                <button class="sidebar-btn" data-view="publish" data-type="article">
+                    <i class="ri-article-line"></i> Rédaction
+                </button>
+                <button class="sidebar-btn" data-view="publish" data-type="image">
+                    <i class="ri-image-line"></i> Photos & Visuels
+                </button>
+                <button class="sidebar-btn" data-view="publish" data-type="corporate">
+                    <i class="ri-briefcase-line"></i> Corporate Info
+                </button>
+            </nav>
+            <button id="admin-logout" class="sidebar-btn sidebar-logout">
+                <i class="ri-logout-box-line"></i> Déconnexion
+            </button>
+        </aside>
+
+        <!-- Main content -->
+        <main class="admin-main">
+
+            <!-- ── TOP BAR ─────────────────────────────────────────────── -->
+            <header class="admin-topbar glass">
+                <h1 id="view-title">Dashboard</h1>
+                <div class="topbar-actions">
+                    <button id="theme-toggle" class="filter-btn"><i class="ri-moon-line"></i></button>
+                    <a href="index.html" target="_blank" class="btn glass"><i class="ri-external-link-line"></i> Voir le
+                        site</a>
+                </div>
+                <div id="offline-indicator" class="offline-indicator admin-offline-indicator"><i
+                        class="ri-wifi-off-line"></i> Hors-ligne</div>
+            </header>
+
+            <!-- ── VIEW: DASHBOARD ─────────────────────────────────────── -->
+            <section id="view-dashboard" class="admin-view active">
+                <div class="stats-grid" id="stats-grid"><!-- JS renders --></div>
+                <div class="admin-section-title">Aperçu du Catalogue</div>
+                <div id="preview-grid" class="admin-preview-grid"><!-- JS renders --></div>
+            </section>
+
+            <!-- ── VIEW: PUBLISH (STUDIOS) ────────────────────────────── -->
+            <section id="view-publish" class="admin-view hidden">
+                <div class="studio-selector reveal">
+                    <button class="studio-card" data-studio="video">
+                        <i class="ri-video-add-line"></i>
+                        <span>Studio Vidéo & Animation</span>
+                        <p>MP4, GIF, VR</p>
+                    </button>
+                    <button class="studio-card" data-studio="music">
+                        <i class="ri-music-2-line"></i>
+                        <span>Studio Audio & Podcast</span>
+                        <p>MP3, WAV</p>
+                    </button>
+                    <button class="studio-card" data-studio="article">
+                        <i class="ri-article-line"></i>
+                        <span>Studio Rédaction</span>
+                        <p>Articles, News, Tutos</p>
+                    </button>
+                    <button class="studio-card" data-studio="image">
+                        <i class="ri-image-line"></i>
+                        <span>Studio Visuel</span>
+                        <p>Photos, Illustrations</p>
+                    </button>
+                    <button class="studio-card" data-studio="animation">
+                        <i class="ri-movie-line"></i>
+                        <span>Studio Animation</span>
+                        <p>GIFs, WebP, Dynamiques</p>
+                    </button>
+                    <button class="studio-card" data-studio="vr">
+                        <i class="ri-radar-line"></i>
+                        <span>Studio VR & 360°</span>
+                        <p>Contenus Immersifs</p>
+                    </button>
+                    <button class="studio-card" data-studio="podcast">
+                        <i class="ri-mic-line"></i>
+                        <span>Studio Podcast</span>
+                        <p>Émissions, Séries Audio</p>
+                    </button>
+                    <button class="studio-card" data-studio="corporate">
+                        <i class="ri-briefcase-line"></i>
+                        <span>Studio Corporate</span>
+                        <p>Recrutement, Annonces</p>
+                    </button>
+                </div>
+
+                <div id="studio-form-container" class="studio-form-container hidden">
+                    <button id="back-to-selector" class="btn btn-ghost"><i class="ri-arrow-left-line"></i> Retour aux
+                        Studios</button>
+
+                    <div class="publish-card glass">
+                        <h2 id="studio-title">Chargement...</h2>
+
+                        <form id="publish-form" novalidate enctype="multipart/form-data">
+                            <input type="hidden" id="edit-id">
+                            <input type="hidden" id="media-type">
+
+                            <div class="form-grid-layout">
+                                <!-- Gauche : Fichiers & Media -->
+                                <div class="form-side-media">
+                                    <div class="form-group" id="media-file-group">
+                                        <label>Fichier Source *</label>
+                                        <div class="upload-dropzone" id="media-dropzone">
+                                            <i class="ri-upload-cloud-line"></i>
+                                            <p>Glissez le fichier ici ou cliquez</p>
+                                            <input type="file" id="media-file-input" class="hidden-input"
+                                                accept="video/*,audio/*,image/*,application/pdf,.gif,.webp">
+                                            <div id="media-file-info" class="file-info hidden"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Miniature (Thumbnail) *</label>
+                                        <div class="upload-dropzone thumb-dropzone" id="thumb-dropzone">
+                                            <i class="ri-image-add-line"></i>
+                                            <input type="file" id="thumb-file-input" class="hidden-input"
+                                                accept="image/*">
+                                            <img id="thumb-preview" src="" alt="Aperçu" class="thumb-preview hidden">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="attachment-file-group">
+                                        <label>Document Attaché (PDF/Doc)</label>
+                                        <div class="upload-dropzone" id="attachment-dropzone">
+                                            <i class="ri-file-pdf-2-line"></i>
+                                            <p>Joindre un fichier source</p>
+                                            <input type="file" id="attachment-file-input" class="hidden-input"
+                                                accept=".pdf,.doc,.docx,.ppt,.pptx">
+                                            <div id="attachment-file-info" class="file-info hidden"></div>
+                                        </div>
+                                    </div>
+
+                                    <div id="upload-progress-container" class="upload-progress-container hidden">
+                                        <div class="progress-label">Transfert en cours... <span
+                                                id="progress-percent">0%</span></div>
+                                        <div class="progress-bar-bg">
+                                            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Zone Dynamique : Métadonnées et Contenu -->
+                                <div class="form-side-meta">
+                                    <div class="form-group">
+                                        <label for="media-title" id="label-title">Titre du contenu *</label>
+                                        <input type="text" id="media-title" placeholder="Ex: Voyage au Japon 4K"
+                                            required>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="media-category">Catégorie *</label>
+                                            <input type="text" id="media-category" placeholder="Nature, Tech..."
+                                                required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="media-author">Auteur</label>
+                                            <input type="text" id="media-author" value="Admin">
+                                        </div>
+                                    </div>
+
+                                    <div id="media-url-group" class="form-group">
+                                        <label for="media-backup-url">URL de repli (Optionnel)</label>
+                                        <input type="url" id="media-backup-url"
+                                            placeholder="Ex: https://vimeo.com/123...">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="media-description" id="label-desc">Description Courte</label>
+                                        <textarea id="media-description" rows="3"
+                                            placeholder="Présentez votre œuvre..."></textarea>
+                                    </div>
+
+                                    <!-- Champs spécifiques Corporate (Annonces/Recrutement) -->
+                                    <div id="corporate-meta-fields" class="hidden">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="meta-job-title">Intitulé du Poste / Objet</label>
+                                                <input type="text" id="meta-job-title"
+                                                    placeholder="Ex: Développeur Senior">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="meta-deadline">Date Limite / Échéance</label>
+                                                <input type="date" id="meta-deadline">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="meta-location">Lieu / Département</label>
+                                            <input type="text" id="meta-location" placeholder="Ex: Paris, France / IT">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Zone de texte large pour Articles/Corporate -->
+                                <div id="content-field-group" class="form-full-width hidden">
+                                    <div class="form-group">
+                                        <label for="content-field">Corps de l'article / Contenu Détaillé *</label>
+                                        <textarea id="content-field" rows="15"
+                                            placeholder="Rédigez votre contenu ici (Supporte le Markdown/HTML)..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox" id="media-featured">
+                                    <label for="media-featured">⭐ Mettre en vedette (Slide Home)</label>
+                                </div>
+
+                                <div id="form-feedback" class="form-feedback hidden"></div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                                        <i class="ri-send-plane-fill"></i> Publier dans StreamVibe
+                                    </button>
+                                </div>
+                            </div> <!-- end form-grid-layout -->
+                        </form>
+                    </div> <!-- end publish-card -->
+                </div> <!-- end studio-form-container -->
+            </section>
+
+            <!-- ── VIEW: CATALOG ──────────────────────────────────────── -->
+            <section id="view-catalog" class="admin-view hidden">
+                <div class="catalog-toolbar">
+                    <div class="input-icon-wrap" style="flex:1;max-width:400px;">
+                        <i class="ri-search-line"></i>
+                        <input type="text" id="catalog-search" placeholder="Rechercher dans le catalogue…">
+                    </div>
+                    <select id="catalog-filter" class="filter-select">
+                        <option value="all">Tous les types</option>
+                    </select>
+                </div>
+                <div id="catalog-table-wrap">
+                    <table class="catalog-table">
+                        <thead>
+                            <tr>
+                                <th>Miniature</th>
+                                <th>Titre</th>
+                                <th>Type</th>
+                                <th>Catégorie</th>
+                                <th>Vedette</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="catalog-body"><!-- JS renders --></tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+        <div class="modal-content glass" style="max-width:460px;text-align:center;">
+            <i class="ri-error-warning-line" style="font-size:3rem;color:#ef4444;"></i>
+            <h3 style="margin:1rem 0 .5rem;">Supprimer ce contenu ?</h3>
+            <p id="confirm-msg" style="opacity:.7;margin-bottom:2rem;"></p>
+            <div style="display:flex;gap:1rem;justify-content:center;">
+                <button id="confirm-cancel" class="btn glass">Annuler</button>
+                <button id="confirm-ok" class="btn" style="background:#ef4444;color:#fff;">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <script src="assets/js/theme-toggle.js"></script>
+    <script src="assets/js/offline-db.js"></script>
+    <script src="assets/js/offline-sync.js"></script>
+    <script src="assets/js/db-service.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+
+</html>

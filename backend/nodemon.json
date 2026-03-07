@@ -1,0 +1,8 @@
+{
+    "ignore": [
+        "uploads/*",
+        "migrate_log.txt",
+        ".git"
+    ],
+    "delay": "1000"
+}

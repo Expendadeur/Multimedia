@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+backend/node_modules_old/
+backend/node_modules_corrupted*/
+
+# Media & Uploads (THE HEAVY PART)
+backend/uploads/
+
+# Environment & Secrets
+backend/.env
+.env
+
+# Logs & OS Files
+*.log
+backend/migrate_log.txt
+.DS_Store
+Thumbs.db

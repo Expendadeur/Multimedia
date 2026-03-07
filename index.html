@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVibe | Plateforme Multimédia Premium</title>
+    <meta name="description"
+        content="Découvrez une expérience multimédia unique avec StreamVibe. Vidéos 4K, musique, animations, VR, et plus encore.">
+    <meta name="keywords" content="streaming, multimedia, vidéo, musique, animation, VR, contenu premium">
+    <meta property="og:title" content="StreamVibe | Plateforme Multimédia Premium">
+    <meta property="og:description" content="Plateforme multimédia de nouvelle génération.">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/main.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+</head>
+
+<body>
+
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <div class="loader-logo">Stream<span>Vibe</span></div>
+        <div class="loader-bar">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+
+    <!-- ─── Search Overlay ─────────────────────────────────────── -->
+    <div id="search-overlay" class="search-overlay">
+        <div class="search-overlay-inner">
+            <div class="search-bar-wrap">
+                <i class="ri-search-line search-icon-lg"></i>
+                <input type="text" id="search-input" placeholder="Rechercher vidéos, musique, animations…"
+                    autocomplete="off" aria-label="Recherche">
+                <button id="search-close" aria-label="Fermer"><i class="ri-close-line"></i></button>
+            </div>
+            <div id="search-results" class="search-results" role="listbox"></div>
+        </div>
+    </div>
+
+    <!-- ─── Header ─────────────────────────────────────────────── -->
+    <header id="main-header">
+        <div class="logo" role="heading" aria-level="1" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+            Stream<span>Vibe</span>
+        </div>
+
+        <nav class="nav-links" role="navigation" aria-label="Navigation principale">
+            <a href="#home">Accueil</a>
+            <a href="#explore">Explorer</a>
+            <a href="#featured">Tendances</a>
+            <a href="#categories">Catégories</a>
+        </nav>
+
+        <div class="nav-actions">
+            <button id="search-btn" class="icon-btn" aria-label="Rechercher"><i class="ri-search-line"></i></button>
+            <button id="theme-toggle" class="icon-btn" aria-label="Changer le thème"><i
+                    class="ri-moon-line"></i></button>
+            <a href="admin.html" class="btn btn-primary admin-link" aria-label="Accès admin"><i
+                    class="ri-shield-user-line"></i> Admin</a>
+            <button id="mobile-menu-btn" class="icon-btn mobile-only" aria-label="Menu"><i
+                    class="ri-menu-3-line"></i></button>
+        </div>
+        <div id="offline-indicator" class="offline-indicator"><i class="ri-wifi-off-line"></i> Hors-ligne</div>
+    </header>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu" class="mobile-drawer glass" role="dialog" aria-label="Menu mobile">
+        <button id="mobile-close" class="mobile-close-btn"><i class="ri-close-line"></i></button>
+        <nav class="mobile-nav">
+            <a href="#home">Accueil</a>
+            <a href="#explore">Explorer</a>
+            <a href="#featured">Tendances</a>
+            <a href="#categories">Catégories</a>
+            <a href="admin.html" class="btn btn-primary" style="margin-top:1rem;">Espace Admin</a>
+        </nav>
+    </div>
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+
+    <!-- ─── Hero Section ───────────────────────────────────────── -->
+    <section id="home" class="hero">
+        <!-- Animated Background Blobs -->
+        <div class="blob blob-1" aria-hidden="true"></div>
+        <div class="blob blob-2" aria-hidden="true"></div>
+        <div class="blob blob-3" aria-hidden="true"></div>
+
+        <div class="hero-content">
+            <div class="hero-badge reveal"><i class="ri-live-line"></i> Nouveau · Actualisé Aujourd'hui</div>
+            <h1 class="hero-title reveal">
+                L'Univers <span class="gradient-text">Multimédia</span><br>à Votre Portée
+            </h1>
+            <p class="hero-subtitle reveal">Vidéos 4K, musique haute fidélité, animations, podcasts, VR et bien plus.
+                Une plateforme. Toutes vos expériences.</p>
+            <div class="hero-cta reveal">
+                <button class="btn btn-primary btn-lg"
+                    onclick="document.getElementById('explore').scrollIntoView({behavior:'smooth'})">
+                    <i class="ri-compass-3-line"></i> Explorer
+                </button>
+                <button class="btn btn-ghost btn-lg"
+                    onclick="document.getElementById('search-overlay').classList.add('active');document.getElementById('search-input').focus()">
+                    <i class="ri-search-line"></i> Rechercher
+                </button>
+            </div>
+        </div>
+
+        <!-- Hero Rolling Ticker -->
+        <div class="hero-ticker" aria-hidden="true">
+            <div class="ticker-track">
+                <span>🎬 Vidéo</span><span>🎵 Musique</span><span>🖼️ Photo</span>
+                <span>✨ Animation</span><span>📄 Article</span><span>🎙️ Podcast</span>
+                <span>🥽 VR</span><span>🕹️ Interactif</span><span>📁 Document</span>
+                <span>🎬 Vidéo</span><span>🎵 Musique</span><span>🖼️ Photo</span>
+                <span>✨ Animation</span><span>📄 Article</span><span>🎙️ Podcast</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── Featured Strip ──────────────────────────────────────── -->
+    <section id="featured" class="section featured-section">
+        <div class="section-header reveal">
+            <h2>🔥 En Vedette</h2>
+            <p>Sélection premium de l'équipe StreamVibe</p>
+        </div>
+        <div id="featured-strip" class="featured-strip"></div>
+    </section>
+
+    <!-- ─── Gallery Section ────────────────────────────────────── -->
+    <section id="explore" class="section">
+        <div class="section-header reveal">
+            <h2>Explorer</h2>
+            <p>Toute la bibliothèque multimédia</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div id="categories" class="filter-bar-container">
+            <div class="filter-bar reveal" id="filter-bar" role="tablist"></div>
+        </div>
+
+        <!-- Grid -->
+        <div id="media-grid" class="media-grid" aria-live="polite"></div>
+
+        <!-- Empty state -->
+        <div id="empty-state" class="empty-state hidden">
+            <i class="ri-search-eye-line"></i>
+            <p>Aucun contenu trouvé pour ce filtre.</p>
+        </div>
+    </section>
+
+    <!-- ─── Media Player Modal ─────────────────────────────────── -->
+    <div id="player-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Lecteur média">
+        <div class="modal-content glass" id="modal-inner">
+            <button id="close-modal" class="modal-close-btn" aria-label="Fermer"><i class="ri-close-line"></i></button>
+            <div id="player-container"></div>
+        </div>
+    </div>
+
+    <!-- ─── Footer ─────────────────────────────────────────────── -->
+    <footer class="site-footer glass">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo">Stream<span>Vibe</span></div>
+                <p>La plateforme multimédia de nouvelle génération.</p>
+            </div>
+            <nav class="footer-links">
+                <h4>Plateforme</h4>
+                <a href="#home">Accueil</a>
+                <a href="#explore">Explorer</a>
+                <a href="admin.html">Admin</a>
+            </nav>
+            <nav class="footer-links">
+                <h4>Légal</h4>
+                <a href="#">Conditions</a>
+                <a href="#">Confidentialité</a>
+                <a href="#">Cookies</a>
+            </nav>
+            <div class="footer-social">
+                <h4>Suivez-nous</h4>
+                <div class="social-row">
+                    <a href="#" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="ri-twitter-x-line"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="ri-youtube-line"></i></a>
+                    <a href="#" aria-label="TikTok"><i class="ri-tiktok-line"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 StreamVibe. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container" role="status" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/theme-toggle.js"></script>
+    <script src="assets/js/offline-db.js"></script>
+    <script src="assets/js/offline-sync.js"></script>
+    <script src="assets/js/db-service.js"></script>
+    <script src="assets/js/players.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>
