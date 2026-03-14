@@ -86,6 +86,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     openStudio(type);
                 } else {
                     resetStudioForm();
+                    studioFormContainer.classList.add('hidden');
+                    studioSelector.classList.remove('hidden');
                 }
             }
         });
@@ -145,6 +147,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const animCaptureStatus = document.getElementById('anim-capture-status');
     let generatedAnimationFile = null;
     let animRequestID = null;
+
+    // View Published Content in Studio
+    const studioPublishedCard = document.getElementById('studio-published-card');
+    const studioContentGrid = document.getElementById('studio-content-grid');
+    const previewModal = document.getElementById('preview-modal');
+    const previewContainer = document.getElementById('preview-container');
+    const previewTitle = document.getElementById('preview-title');
+    const closePreviewBtn = document.getElementById('close-preview');
 
     // --- Animation Drawing Logic ---
     function startAnimationPreview() {
@@ -302,6 +312,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         mediaTypeInput.value = type;
         const config = STUDIO_CONFIG[type] || { title: 'Studio Média' };
         studioTitle.innerHTML = `<i class="${config.icon}"></i> ${config.title}`;
+
+        // Load existing content of this type
+        loadStudioContent(type);
 
         const grid = document.querySelector('.form-grid-layout');
         const contentGroup = document.getElementById('content-field-group');
@@ -505,6 +518,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (animCaptureStatus) animCaptureStatus.classList.add('hidden');
         if (btnGenerateAnim) btnGenerateAnim.innerHTML = '<i class="ri-record-circle-line"></i> Générer & Capturer (3s)';
         stopAnimationPreview();
+
+        if (studioPublishedCard) studioPublishedCard.style.display = 'none';
+        if (studioContentGrid) studioContentGrid.innerHTML = '';
     }
 
     function showFeedback(msg, type) {
@@ -512,6 +528,82 @@ document.addEventListener('DOMContentLoaded', async () => {
         formFeedback.className = `form-feedback ${type}`;
         formFeedback.classList.remove('hidden');
     }
+
+    // --- Studio Content Loading & Preview ---
+    async function loadStudioContent(type) {
+        if (!studioContentGrid || !studioPublishedCard) return;
+        studioContentGrid.innerHTML = '<p style="opacity:0.5;">Chargement...</p>';
+        studioPublishedCard.style.display = 'block';
+
+        try {
+            const allMedia = await DB_Service.getAll();
+            const filtered = allMedia.filter(m => m.type === type);
+
+            if (filtered.length === 0) {
+                studioContentGrid.innerHTML = '<p style="opacity:0.5; padding: 1rem; border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px; width: 100%;">Aucun contenu publié dans ce studio.</p>';
+                return;
+            }
+
+            studioContentGrid.innerHTML = filtered.map(item => `
+                <div class="studio-content-card" onclick="openMediaPreview('${item._id || item.id}')">
+                    <img src="${item.thumbnail}" class="studio-card-thumb" onerror="this.src='assets/img/placeholder.png'">
+                    <div class="studio-card-info">
+                        <h4>${item.title}</h4>
+                        <p>${item.category} • ${new Date(item.createdAt || item.publishedAt).toLocaleDateString('fr-FR')}</p>
+                    </div>
+                </div>
+            `).join('');
+        } catch (err) {
+            studioContentGrid.innerHTML = `<p style="color:#ef4444;">Erreur: ${err.message}</p>`;
+        }
+    }
+
+    window.openMediaPreview = async function (id) {
+        if (!previewModal || !previewContainer) return;
+        previewContainer.innerHTML = '<i class="ri-loader-4-line ri-spin" style="font-size: 2rem;"></i>';
+        previewTitle.textContent = "Chargement...";
+        previewModal.classList.remove('hidden');
+
+        try {
+            const media = await DB_Service.getById(id);
+            if (!media) throw new Error("Média introuvable");
+
+            previewTitle.textContent = media.title;
+            const url = media.media || media.backupUrl;
+
+            if (media.type === 'video' || media.type === 'animation') {
+                previewContainer.innerHTML = `<video src="${url}" controls autoplay style="width:100%; height:auto;"></video>`;
+            } else if (media.type === 'music' || media.type === 'podcast') {
+                previewContainer.innerHTML = `
+                    <div style="text-align:center; width:100%;">
+                        <img src="${media.thumbnail}" style="width:200px; height:200px; object-fit:cover; border-radius:12px; margin-bottom:1rem;">
+                        <audio src="${url}" controls autoplay style="width:90%;"></audio>
+                    </div>`;
+            } else if (media.type === 'image' || media.type === 'visual') {
+                previewContainer.innerHTML = `<img src="${url}" style="max-width:100%; max-height:70vh; object-fit:contain;">`;
+            } else {
+                previewContainer.innerHTML = `<div style="padding:2rem; text-align:center;">
+                    <i class="ri-file-text-line" style="font-size:3rem; opacity:0.3;"></i>
+                    <p style="margin-top:1rem;">Ce type de contenu (${media.type}) ne peut pas être prévisualisé directement.</p>
+                    <a href="${media.attachment || '#'}" target="_blank" class="btn glass" style="margin-top:1rem;">Ouvrir le document</a>
+                </div>`;
+            }
+        } catch (err) {
+            previewContainer.innerHTML = `<p style="color:#ef4444; padding:2rem;">${err.message}</p>`;
+        }
+    }
+
+    if (closePreviewBtn) {
+        closePreviewBtn.addEventListener('click', () => {
+            previewModal.classList.add('hidden');
+            previewContainer.innerHTML = '';
+        });
+    }
+
+    // Close preview on overlay click
+    previewModal?.addEventListener('click', (e) => {
+        if (e.target === previewModal) closePreviewBtn.click();
+    });
 
     // ── Catalog ───────────────────────────────────────────────────────────────
     const catalogBody = document.getElementById('catalog-body');

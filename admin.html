@@ -64,22 +64,22 @@
                 <button class="sidebar-btn" data-view="publish">
                     <i class="ri-grid-fill"></i> Tous les Studios
                 </button>
-                <button class="sidebar-btn" data-view="catalog" data-type="video">
+                <button class="sidebar-btn" data-view="publish" data-type="video">
                     <i class="ri-video-line"></i> Vidéos
                 </button>
-                <button class="sidebar-btn" data-view="catalog" data-type="animation">
+                <button class="sidebar-btn" data-view="publish" data-type="animation">
                     <i class="ri-magic-line"></i> Animation
                 </button>
-                <button class="sidebar-btn" data-view="catalog" data-type="music">
+                <button class="sidebar-btn" data-view="publish" data-type="music">
                     <i class="ri-music-2-line"></i> Musique & Pod
                 </button>
-                <button class="sidebar-btn" data-view="catalog" data-type="article">
+                <button class="sidebar-btn" data-view="publish" data-type="article">
                     <i class="ri-article-line"></i> Rédaction
                 </button>
-                <button class="sidebar-btn" data-view="catalog" data-type="image">
+                <button class="sidebar-btn" data-view="publish" data-type="image">
                     <i class="ri-image-line"></i> Photos & Visuels
                 </button>
-                <button class="sidebar-btn" data-view="catalog" data-type="corporate">
+                <button class="sidebar-btn" data-view="publish" data-type="corporate">
                     <i class="ri-briefcase-line"></i> Corporate Info
                 </button>
             </nav>
@@ -317,6 +317,17 @@
                             </div> <!-- end form-grid-layout -->
                         </form>
                     </div> <!-- end publish-card -->
+
+                    <!-- ── VIEW: IN-STUDIO PUBLISHED CONTENT ────────────────── -->
+                    <div class="publish-card glass" id="studio-published-card" style="margin-top: 2rem; display: none;">
+                        <h3
+                            style="margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                            <i class="ri-history-line"></i> Contenus publiés dans ce studio
+                        </h3>
+                        <div id="studio-content-grid" class="studio-content-grid">
+                            <!-- JS injects local content cards here -->
+                        </div>
+                    </div>
                 </div> <!-- end studio-form-container -->
             </section>
 
@@ -374,6 +385,20 @@
 
     <!-- Toast Notifications -->
     <div id="toast-container"></div>
+
+    <!-- Media Preview Modal -->
+    <div id="preview-modal" class="modal-overlay hidden">
+        <div class="modal-content glass" style="max-width:800px; width:95%; padding:1rem; position: relative;">
+            <button id="close-preview" class="btn btn-ghost"
+                style="position:absolute; top:10px; right:10px; z-index:10; background:rgba(0,0,0,0.5);"><i
+                    class="ri-close-line"></i></button>
+            <div id="preview-container"
+                style="width:100%; display:flex; justify-content:center; align-items:center; background:#000; border-radius:8px; overflow:hidden; min-height:400px;">
+                <!-- Player injected here by JS -->
+            </div>
+            <h3 id="preview-title" style="margin-top:1rem; text-align:center;">Aperçu</h3>
+        </div>
+    </div>
 
     <script src="assets/js/theme-toggle.js"></script>
     <script src="assets/js/offline-db.js"></script>
