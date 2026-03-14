@@ -81,8 +81,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (v === 'dashboard') renderDashboard();
             if (v === 'catalog') renderCatalog();
             if (v === 'publish') {
-                if (type) openStudio(type);
-                else resetForm();
+                if (type) {
+                    resetStudioForm();
+                    openStudio(type);
+                } else {
+                    resetStudioForm();
+                }
             }
         });
     });
@@ -279,7 +283,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         corporate: { title: 'Studio Corporate', icon: 'ri-briefcase-line', label: 'Corporate' }
     };
 
-    const corporateMetaFields = document.getElementById('corporate-meta-fields');
     const attachmentFileInput = document.getElementById('attachment-file-input');
     const attachmentDropzone = document.getElementById('attachment-dropzone');
     const attachmentFileInfo = document.getElementById('attachment-file-info');
@@ -325,12 +328,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Specific Visibility
-        corporateMetaFields.classList.toggle('hidden', type !== 'corporate');
-
         // Handle Animation Generator visibility
         if (type === 'animation') {
             animGeneratorGroup.classList.remove('hidden');
-            mediaFileGroup.classList.add('hidden'); // Initially hide file input, as they might generate one
+            mediaFileGroup.classList.add('hidden'); // Initially hide file input
             startAnimationPreview();
         } else {
             if (animGeneratorGroup) animGeneratorGroup.classList.add('hidden');
@@ -342,7 +343,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             mediaFileGroup.classList.add('hidden');
         }
 
-        attachmentDropzone.classList.toggle('hidden', type !== 'article' && type !== 'corporate');
+        // Validate attachment file specific visibility
+        if (attachmentDropzone) {
+            attachmentDropzone.classList.toggle('hidden', type !== 'article' && type !== 'corporate');
+        }
 
         // Update Media File Label
         const mediaLabel = document.querySelector('#media-file-group label');
@@ -351,8 +355,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 type === 'image' ? 'Fichier Image *' :
                     'Fichier Vidéo (ou Anim) *';
         }
-
-        resetStudioForm();
     }
 
     // Dropzone logic
