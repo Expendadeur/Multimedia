@@ -64,22 +64,22 @@
                 <button class="sidebar-btn" data-view="publish">
                     <i class="ri-grid-fill"></i> Tous les Studios
                 </button>
-                <button class="sidebar-btn" data-view="publish" data-type="video">
-                    <i class="ri-video-add-line"></i> Vidéos
+                <button class="sidebar-btn" data-view="catalog" data-type="video">
+                    <i class="ri-video-line"></i> Vidéos
                 </button>
-                <button class="sidebar-btn" data-view="publish" data-type="animation">
+                <button class="sidebar-btn" data-view="catalog" data-type="animation">
                     <i class="ri-magic-line"></i> Animation
                 </button>
-                <button class="sidebar-btn" data-view="publish" data-type="music">
+                <button class="sidebar-btn" data-view="catalog" data-type="music">
                     <i class="ri-music-2-line"></i> Musique & Pod
                 </button>
-                <button class="sidebar-btn" data-view="publish" data-type="article">
+                <button class="sidebar-btn" data-view="catalog" data-type="article">
                     <i class="ri-article-line"></i> Rédaction
                 </button>
-                <button class="sidebar-btn" data-view="publish" data-type="image">
+                <button class="sidebar-btn" data-view="catalog" data-type="image">
                     <i class="ri-image-line"></i> Photos & Visuels
                 </button>
-                <button class="sidebar-btn" data-view="publish" data-type="corporate">
+                <button class="sidebar-btn" data-view="catalog" data-type="corporate">
                     <i class="ri-briefcase-line"></i> Corporate Info
                 </button>
             </nav>
@@ -322,14 +322,21 @@
 
             <!-- ── VIEW: CATALOG ──────────────────────────────────────── -->
             <section id="view-catalog" class="admin-view hidden">
-                <div class="catalog-toolbar">
-                    <div class="input-icon-wrap" style="flex:1;max-width:400px;">
+                <div class="catalog-toolbar" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="input-icon-wrap" style="flex:1;max-width:400px;margin-right:1rem;">
                         <i class="ri-search-line"></i>
                         <input type="text" id="catalog-search" placeholder="Rechercher dans le catalogue…">
                     </div>
-                    <select id="catalog-filter" class="filter-select">
-                        <option value="all">Tous les types</option>
-                    </select>
+                    <div style="display:flex; gap:1rem; align-items:center;">
+                        <select id="catalog-filter" class="filter-select">
+                            <option value="all">Tous les types</option>
+                        </select>
+                        <button class="btn btn-primary"
+                            onclick="document.querySelector('[data-view=\'publish\']').click()"
+                            style="padding:0.6rem 1rem;">
+                            <i class="ri-add-line"></i> Nouveau
+                        </button>
+                    </div>
                 </div>
                 <div id="catalog-table-wrap">
                     <table class="catalog-table">
