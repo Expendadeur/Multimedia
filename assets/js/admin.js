@@ -132,6 +132,142 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mediaFileInfo = document.getElementById('media-file-info');
     const formFeedback = document.getElementById('form-feedback');
 
+    // Animation Generator Specifics
+    const animGeneratorGroup = document.getElementById('animation-generator-group');
+    const animCanvas = document.getElementById('anim-canvas');
+    const animCtx = animCanvas ? animCanvas.getContext('2d') : null;
+    const animPresetSelect = document.getElementById('anim-preset-select');
+    const btnGenerateAnim = document.getElementById('btn-generate-anim');
+    const animCaptureStatus = document.getElementById('anim-capture-status');
+    let generatedAnimationFile = null;
+    let animRequestID = null;
+
+    // --- Animation Drawing Logic ---
+    function startAnimationPreview() {
+        if (!animCanvas) return;
+        stopAnimationPreview();
+        const type = animPresetSelect.value;
+        if (type === 'particles') drawParticles();
+        else if (type === 'matrix') drawMatrix();
+        else if (type === 'talking') drawTalking();
+        else if (type === 'wave') drawWave();
+    }
+
+    function stopAnimationPreview() {
+        if (animRequestID) cancelAnimationFrame(animRequestID);
+    }
+
+    if (animPresetSelect) {
+        animPresetSelect.addEventListener('change', startAnimationPreview);
+    }
+
+    // Preset 1: Particles
+    let particles = [];
+    function drawParticles() {
+        if (particles.length === 0) {
+            for (let i = 0; i < 50; i++) particles.push({ x: Math.random() * 400, y: Math.random() * 300, vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2 });
+        }
+        animCtx.fillStyle = '#0f172a'; animCtx.fillRect(0, 0, 400, 300);
+        animCtx.fillStyle = '#8b5cf6';
+        particles.forEach(p => {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > 400) p.vx *= -1;
+            if (p.y < 0 || p.y > 300) p.vy *= -1;
+            animCtx.beginPath(); animCtx.arc(p.x, p.y, 3, 0, Math.PI * 2); animCtx.fill();
+        });
+        animRequestID = requestAnimationFrame(drawParticles);
+    }
+
+    // Preset 2: Matrix
+    let columns = Array(Math.floor(400 / 15)).fill(0);
+    function drawMatrix() {
+        animCtx.fillStyle = 'rgba(0, 0, 0, 0.1)'; animCtx.fillRect(0, 0, 400, 300);
+        animCtx.fillStyle = '#10b981'; animCtx.font = '15px monospace';
+        columns.forEach((y, i) => {
+            const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+            animCtx.fillText(char, i * 15, y);
+            if (y > 300 + Math.random() * 10000) columns[i] = 0;
+            else columns[i] = y + 15;
+        });
+        animRequestID = requestAnimationFrame(drawMatrix);
+    }
+
+    // Preset 3: Talking Character
+    let mouthOpen = 0; let mouthDir = 1;
+    function drawTalking() {
+        animCtx.fillStyle = '#1e293b'; animCtx.fillRect(0, 0, 400, 300);
+        animCtx.fillStyle = '#fed7aa'; animCtx.beginPath(); animCtx.arc(200, 150, 60, 0, Math.PI * 2); animCtx.fill(); // Head
+        animCtx.fillStyle = '#000'; animCtx.beginPath(); animCtx.arc(175, 130, 8, 0, Math.PI * 2); animCtx.fill(); // Left Eye
+        animCtx.beginPath(); animCtx.arc(225, 130, 8, 0, Math.PI * 2); animCtx.fill(); // Right Eye
+        // Mouth
+        mouthOpen += 2 * mouthDir; if (mouthOpen > 20 || mouthOpen < 0) mouthDir *= -1;
+        animCtx.fillStyle = '#991b1b'; animCtx.beginPath(); animCtx.ellipse(200, 175, 15, 5 + mouthOpen / 2, 0, 0, Math.PI * 2); animCtx.fill();
+        animCtx.fillStyle = '#fff'; animCtx.font = '20px sans-serif'; animCtx.fillText("Bonjour StreamVibe !", 110, 250);
+        animRequestID = requestAnimationFrame(drawTalking);
+    }
+
+    // Preset 4: Wave
+    let waveOffset = 0;
+    function drawWave() {
+        animCtx.fillStyle = '#020617'; animCtx.fillRect(0, 0, 400, 300);
+        animCtx.strokeStyle = '#3b82f6'; animCtx.lineWidth = 3; animCtx.beginPath();
+        for (let i = 0; i < 400; i += 5) {
+            let y = 150 + Math.sin(i * 0.05 + waveOffset) * 50 * Math.sin(waveOffset * 0.5);
+            if (i === 0) animCtx.moveTo(i, y); else animCtx.lineTo(i, y);
+        }
+        animCtx.stroke();
+        waveOffset += 0.1;
+        animRequestID = requestAnimationFrame(drawWave);
+    }
+
+    // --- MediaRecorder Capture Logic ---
+    if (btnGenerateAnim) {
+        btnGenerateAnim.addEventListener('click', () => {
+            if (!animCanvas) return;
+
+            btnGenerateAnim.disabled = true;
+            btnGenerateAnim.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Enregistrement (3s)...';
+            animCaptureStatus.classList.remove('hidden');
+            animCaptureStatus.textContent = "Capture en cours, veuillez patienter...";
+
+            const stream = animCanvas.captureStream(30); // 30 FPS
+            const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
+            const chunks = [];
+
+            mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                generatedAnimationFile = new File([blob], `anim_gen_${Date.now()}.webm`, { type: 'video/webm' });
+
+                btnGenerateAnim.innerHTML = '<i class="ri-check-line"></i> Capturé avec succès !';
+                btnGenerateAnim.style.background = '#10b981';
+                animCaptureStatus.textContent = `Fichier généré : ${(blob.size / 1024).toFixed(1)} KB. Prêt à publier.`;
+
+                // Show thumbnail preview from the current canvas state
+                if (thumbPreview && thumbFileInput && !thumbFileInput.files[0]) {
+                    thumbPreview.src = animCanvas.toDataURL('image/jpeg');
+                    thumbPreview.classList.remove('hidden');
+
+                    // Convert dataURL to File for the thumbnail
+                    fetch(thumbPreview.src)
+                        .then(res => res.blob())
+                        .then(blob => {
+                            const file = new File([blob], "anim_thumb.jpg", { type: "image/jpeg" });
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(file);
+                            document.getElementById('thumb-file-input').files = dataTransfer.files;
+                        });
+                }
+
+                setTimeout(() => { btnGenerateAnim.disabled = false; btnGenerateAnim.style.background = '#8b5cf6'; btnGenerateAnim.innerHTML = '<i class="ri-record-circle-line"></i> Refaire une capture'; }, 3000);
+            };
+
+            mediaRecorder.start();
+            setTimeout(() => { mediaRecorder.stop(); }, 3000); // 3 seconds recording
+        });
+    }
+
     const STUDIO_CONFIG = {
         video: { title: 'Studio Vidéo', icon: 'ri-video-add-line', label: 'Vidéo' },
         music: { title: 'Studio Musique', icon: 'ri-music-2-line', label: 'Musique' },
@@ -190,7 +326,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Specific Visibility
         corporateMetaFields.classList.toggle('hidden', type !== 'corporate');
-        mediaFileGroup.classList.toggle('hidden', type === 'article' || type === 'corporate');
+
+        // Handle Animation Generator visibility
+        if (type === 'animation') {
+            animGeneratorGroup.classList.remove('hidden');
+            mediaFileGroup.classList.add('hidden'); // Initially hide file input, as they might generate one
+            startAnimationPreview();
+        } else {
+            if (animGeneratorGroup) animGeneratorGroup.classList.add('hidden');
+            mediaFileGroup.classList.remove('hidden');
+            stopAnimationPreview();
+        }
+
+        if (type === 'article' || type === 'corporate') {
+            mediaFileGroup.classList.add('hidden');
+        }
+
         attachmentDropzone.classList.toggle('hidden', type !== 'article' && type !== 'corporate');
 
         // Update Media File Label
@@ -249,18 +400,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             formData.append('content', document.getElementById('content-field').value.trim());
         }
 
-        const mediaFile = mediaFileInput.files[0];
+        // Determine which file to use for Media
+        let finalMediaFile = mediaFileInput.files[0];
+        if (type === 'animation' && generatedAnimationFile) {
+            finalMediaFile = generatedAnimationFile;
+        }
+
         const thumbFile = thumbFileInput.files[0];
         const attachmentFile = attachmentFileInput.files[0];
 
-        if (!id && type !== 'article' && type !== 'corporate' && !mediaFile) {
-            showFeedback('Veuillez sélectionner un fichier média.', 'error'); return;
+        if (!id && type !== 'article' && type !== 'corporate' && !finalMediaFile) {
+            showFeedback('Veuillez générer ou sélectionner un fichier média.', 'error'); return;
         }
         if (!id && !thumbFile) {
             showFeedback('Veuillez sélectionner une miniature.', 'error'); return;
         }
 
-        if (mediaFile) formData.append('media', mediaFile);
+        if (finalMediaFile) formData.append('media', finalMediaFile);
         if (thumbFile) formData.append('thumbnail', thumbFile);
         if (attachmentFile) formData.append('attachment', attachmentFile);
 
@@ -342,6 +498,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         formFeedback.classList.add('hidden');
         document.getElementById('progress-fill').style.width = '0%';
         document.getElementById('progress-percent').textContent = '0%';
+
+        generatedAnimationFile = null;
+        if (animCaptureStatus) animCaptureStatus.classList.add('hidden');
+        if (btnGenerateAnim) btnGenerateAnim.innerHTML = '<i class="ri-record-circle-line"></i> Générer & Capturer (3s)';
+        stopAnimationPreview();
     }
 
     function showFeedback(msg, type) {

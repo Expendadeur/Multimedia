@@ -163,6 +163,37 @@
                             <div class="form-grid-layout">
                                 <!-- Gauche : Fichiers & Media -->
                                 <div class="form-side-media">
+                                    <!-- GÉNÉRATEUR D'ANIMATION (Nouveau) -->
+                                    <div id="animation-generator-group" class="form-group hidden">
+                                        <label>Générateur d'Animation Dynamique</label>
+                                        <div class="glass"
+                                            style="padding:1rem; border-radius:12px; border:1px solid rgba(255,255,255,0.1); margin-bottom:1rem; text-align:center;">
+                                            <select id="anim-preset-select" class="filter-select"
+                                                style="width:100%; margin-bottom:1rem; padding:0.8rem; border-radius:8px;">
+                                                <option value="particles">Constellation de Particules</option>
+                                                <option value="matrix">Pluie de Code (Matrix)</option>
+                                                <option value="talking">Personnage qui Parle</option>
+                                                <option value="wave">Onde Sonore Abstraite</option>
+                                            </select>
+
+                                            <div
+                                                style="background:#000; border-radius:8px; overflow:hidden; margin-bottom:1rem; border:1px solid rgba(255,255,255,0.2);">
+                                                <canvas id="anim-canvas" width="400" height="300"
+                                                    style="display:block; width:100%; height:auto;"></canvas>
+                                            </div>
+
+                                            <button type="button" id="btn-generate-anim" class="btn"
+                                                style="background:#8b5cf6; width:100%; color:white;">
+                                                <i class="ri-record-circle-line"></i> Générer & Capturer (3s)
+                                            </button>
+                                            <div id="anim-capture-status"
+                                                style="margin-top:0.5rem; font-size:0.85rem; color:#a78bfa;"
+                                                class="hidden">
+                                                Capture en cours...
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group" id="media-file-group">
                                         <label>Fichier Source *</label>
                                         <div class="upload-dropzone" id="media-dropzone">
