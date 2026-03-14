@@ -8,7 +8,7 @@
 const DB_Service = (() => {
 
     // ── Configuration ─────────────────────────────────────────────────────────
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = 'https://multimedia-mqle.onrender.com/api';
 
     const MEDIA_TYPES = [
         { value: 'video', label: '🎬 Vidéo', acceptStr: 'video/*' },
