@@ -173,6 +173,53 @@
     align-items: center;
 }
 
+/* ─── Studio Selector ───────────────────────────────────────── */
+.studio-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0 2rem;
+}
+
+.studio-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    color: var(--text-dark);
+}
+
+.studio-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
+}
+
+.studio-card i {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.studio-card span {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.studio-card p {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin: 0;
+}
+
 /* ─── Form Elements ───────────────────────────────────────── */
 .form-group {
     display: flex;
