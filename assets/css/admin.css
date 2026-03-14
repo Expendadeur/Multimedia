@@ -750,28 +750,66 @@
         left: 0;
         right: 0;
         top: auto;
-        height: auto;
+        height: 70px;
         flex-direction: row;
-        border-radius: 24px 24px 0 0;
-        padding: 1rem 1.5rem;
+        border-radius: 20px 20px 0 0;
+        padding: 0 1rem;
         z-index: 500;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(10px);
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .sidebar-logo,
-    .sidebar-nav {
+    .sidebar-divider {
         display: none;
     }
 
+    .sidebar-nav {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        flex: 1;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0.5rem 0;
+        margin: 0;
+    }
+
+    .sidebar-nav::-webkit-scrollbar {
+        height: 0px;
+        /* Hide scrollbar for clean bottom nav */
+    }
+
     .sidebar-btn {
-        padding: .6rem .8rem;
-        font-size: .75rem;
+        padding: 0.6rem;
+        border-radius: 12px;
+        white-space: nowrap;
+    }
+
+    .sidebar-btn span {
+        display: none;
+        /* Hide text, show only icons to save space */
+    }
+
+    .sidebar-btn i {
+        font-size: 1.4rem;
+        margin: 0;
+    }
+
+    .sidebar-logout {
+        margin-top: 0;
+        margin-left: auto;
+        padding: 0.6rem;
     }
 
     .admin-main {
-        padding: 0 1rem 6rem;
+        padding: 0 1rem 80px;
+        /* Add space at bottom for nav */
     }
 
-    .form-row {
+    .form-grid-layout {
         grid-template-columns: 1fr;
     }
 }
